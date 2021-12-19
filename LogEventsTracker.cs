@@ -1,39 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace OptimaTracker
 {
     public class LogEventsTracker
     {
         readonly static string optimaPath = "Comarch\\Opt!ma\\Logs\\abc.log";
-        public static void ReadOptimaLogs()
+        public static List<Event> ReadOptimaLogs()
         {
-            string[] procedures = { "Logowanie", "BazLista" };
-            if(LogFileExist())
+            List<Event> trackerEvents = new List<Event>();
+            string[] procedures = { 
+                "Logowanie", "BazLista",
+                "KreatorBazy", "CfgStanowiskoOgolneParametry",
+                "CfgSerwisOperacjiAutomatycznych" };
+
+            if (LogFileExist())
                 try
                 {
                     var logLines = File.ReadAllLines(Path.Combine(Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData), optimaPath));
-                    int i = 0;
                     foreach (string line in logLines)
                     {
-                        foreach (string procedureId in procedures)
+                        foreach (string procedure in procedures)
                         {
-                            if (line.Contains(procedureId) && line.Contains("Initialized"))
+                            if (line.Contains(procedure) && line.Contains("Initialized"))
                             {
-                                i++;
-                                Console.WriteLine(procedureId + ' ' + i);
+                                if (trackerEvents.Exists(x => x.procedureId == procedure))
+                                {
+                                    trackerEvents.Find(p => p.procedureId == procedure).numberOfOccurrences++;
+                                }
+                                else
+                                {
+                                    trackerEvents.Add(new Event()
+                                    {
+                                        procedureId = procedure,
+                                        numberOfOccurrences = 1
+                                    });
+                                }
                             }
                         }
                     }
-                   // Console.WriteLine(label + ' ' + i);
                 }
                 catch
                 {
                     Console.WriteLine("Something went wrong...");
                 }
+            return trackerEvents;
         }
 
         public static bool LogFileExist()
