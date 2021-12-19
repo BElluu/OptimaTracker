@@ -48,6 +48,7 @@
     <Compile Include="JsonGenerator.cs" />
     <Compile Include="LogEventsTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Company.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,22 +1,37 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OptimaTracker
 {
-   public class JsonGenerator
+    public class JsonGenerator
     {
-        public static void Generate(List<Event> procedures) 
+        public static void Generate(List<Event> procedures)
         {
+            var jsonObject = new Company
+            {
+                serialKey = "5000012320",
+                TIN = "123-123-99-88",
+                events = procedures
+            };
+
             using (StreamWriter file = File.CreateText(@"D:\OptimaTracker.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, procedures);
+                serializer.Serialize(file, jsonObject);
             }
         }
+
+/*        public static List<Company> CompanyData()
+        {
+            List<Company> company = new List<Company>();
+            company.Add(new Company
+            {
+                serialKey = "5000065720",
+                TIN = "222-123-12-22"
+            });
+
+            return company;
+        }*/
     }
 }

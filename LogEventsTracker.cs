@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace OptimaTracker
 {
@@ -10,9 +9,13 @@ namespace OptimaTracker
         readonly static string optimaPath = "Comarch\\Opt!ma\\Logs\\abc.log";
         public static List<Event> ReadOptimaLogs()
         {
-            List<Event> jsonData = new List<Event>();
-            string[] procedures = { "Logowanie", "BazLista" };
-            if(LogFileExist())
+            List<Event> trackerEvents = new List<Event>();
+            string[] procedures = { 
+                "Logowanie", "BazLista",
+                "KreatorBazy", "CfgStanowiskoOgolneParametry",
+                "CfgSerwisOperacjiAutomatycznych" };
+
+            if (LogFileExist())
                 try
                 {
                     var logLines = File.ReadAllLines(Path.Combine(Environment.GetFolderPath(
@@ -23,11 +26,18 @@ namespace OptimaTracker
                         {
                             if (line.Contains(procedure) && line.Contains("Initialized"))
                             {
-                                jsonData.Add(new Event()
+                                if (trackerEvents.Exists(x => x.procedureId == procedure))
                                 {
-                                    procedureId = procedure,
-                                    numberOfOccurrences = 1
-                                });
+                                    trackerEvents.Find(p => p.procedureId == procedure).numberOfOccurrences++;
+                                }
+                                else
+                                {
+                                    trackerEvents.Add(new Event()
+                                    {
+                                        procedureId = procedure,
+                                        numberOfOccurrences = 1
+                                    });
+                                }
                             }
                         }
                     }
@@ -36,7 +46,7 @@ namespace OptimaTracker
                 {
                     Console.WriteLine("Something went wrong...");
                 }
-            return jsonData;
+            return trackerEvents;
         }
 
         public static bool LogFileExist()
