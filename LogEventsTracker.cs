@@ -8,32 +8,35 @@ namespace OptimaTracker
     public class LogEventsTracker
     {
         readonly static string optimaPath = "Comarch\\Opt!ma\\Logs\\abc.log";
-        public static void ReadOptimaLogs()
+        public static List<Event> ReadOptimaLogs()
         {
+            List<Event> jsonData = new List<Event>();
             string[] procedures = { "Logowanie", "BazLista" };
             if(LogFileExist())
                 try
                 {
                     var logLines = File.ReadAllLines(Path.Combine(Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData), optimaPath));
-                    int i = 0;
                     foreach (string line in logLines)
                     {
-                        foreach (string procedureId in procedures)
+                        foreach (string procedure in procedures)
                         {
-                            if (line.Contains(procedureId) && line.Contains("Initialized"))
+                            if (line.Contains(procedure) && line.Contains("Initialized"))
                             {
-                                i++;
-                                Console.WriteLine(procedureId + ' ' + i);
+                                jsonData.Add(new Event()
+                                {
+                                    procedureId = procedure,
+                                    numberOfOccurrences = 1
+                                });
                             }
                         }
                     }
-                   // Console.WriteLine(label + ' ' + i);
                 }
                 catch
                 {
                     Console.WriteLine("Something went wrong...");
                 }
+            return jsonData;
         }
 
         public static bool LogFileExist()

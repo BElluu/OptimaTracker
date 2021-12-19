@@ -10,18 +10,12 @@ namespace OptimaTracker
 {
    public class JsonGenerator
     {
-        public static void Generate() 
+        public static void Generate(List<Event> procedures) 
         {
-            List<Event> jsonData = new List<Event>();
-            jsonData.Add(new Event()
-            {
-                procedureId = "BazLista",
-                numberOfOccurrences = 5
-            });
             using (StreamWriter file = File.CreateText(@"D:\OptimaTracker.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, jsonData);
+                serializer.Serialize(file, procedures);
             }
         }
     }
