@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace OptimaTracker
 {
@@ -9,8 +10,14 @@ namespace OptimaTracker
         readonly static string optimaPath = "Comarch\\Opt!ma\\Logs\\abc.log";
         public static List<Event> ReadOptimaLogs()
         {
+            DateTime lastEventDate = new DateTime();
+            //Uncomment for tests
+            //DateTime lastEventDate = DateTime.ParseExact("2021-07-18 18:07:20", 
+            //"yyyy-MM-dd HH:mm:ss", 
+            // System.Globalization.CultureInfo.InvariantCulture);
+
             List<Event> trackerEvents = new List<Event>();
-            string[] procedures = { 
+            string[] procedures = {
                 "Logowanie", "BazLista",
                 "KreatorBazy", "CfgStanowiskoOgolneParametry",
                 "CfgSerwisOperacjiAutomatycznych" };
@@ -22,30 +29,36 @@ namespace OptimaTracker
                 Environment.SpecialFolder.ApplicationData), optimaPath));
                     foreach (string line in logLines)
                     {
-                        foreach (string procedure in procedures)
+                        if (line.Contains("Initialized") && ParseStringToDateTime(line) > lastEventDate)
                         {
-                            if (line.Contains(procedure) && line.Contains("Initialized"))
+                            foreach (string procedure in procedures)
                             {
-                                if (trackerEvents.Exists(x => x.procedureId == procedure))
+                                if (line.Contains(procedure))
                                 {
-                                    trackerEvents.Find(p => p.procedureId == procedure).numberOfOccurrences++;
-                                }
-                                else
-                                {
-                                    trackerEvents.Add(new Event()
+                                    if (trackerEvents.Exists(x => x.procedureId == procedure))
                                     {
-                                        procedureId = procedure,
-                                        numberOfOccurrences = 1
-                                    });
+                                        trackerEvents.Find(p => p.procedureId == procedure).numberOfOccurrences++;
+                                    }
+                                    else
+                                    {
+                                        trackerEvents.Add(new Event()
+                                        {
+                                            procedureId = procedure,
+                                            numberOfOccurrences = 1
+                                        });
+                                    }
+                                    lastEventDate = ParseStringToDateTime(line);
                                 }
                             }
                         }
                     }
+
                 }
                 catch
                 {
                     Console.WriteLine("Something went wrong...");
                 }
+            Console.WriteLine(lastEventDate.ToString());
             return trackerEvents;
         }
 
@@ -57,6 +70,14 @@ namespace OptimaTracker
                 return true;
 
             return false;
+        }
+
+        public static DateTime ParseStringToDateTime(string line)
+        {
+            Regex regex = new Regex("[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}");
+            DateTime dateTime = DateTime.ParseExact(regex.Match(line).ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+            return dateTime;
         }
     }
 }
