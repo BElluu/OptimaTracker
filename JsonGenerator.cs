@@ -6,7 +6,7 @@ namespace OptimaTracker
 {
     public class JsonGenerator
     {
-        public static void Generate(List<Event> procedures)
+        public static void GenerateJsonFile(List<Event> procedures)
         {
             var jsonObject = new Company
             {
@@ -22,16 +22,28 @@ namespace OptimaTracker
             }
         }
 
-/*        public static List<Company> CompanyData()
+        public static string GenerateJsonData(List<Event> procedures)
         {
-            List<Company> company = new List<Company>();
-            company.Add(new Company
+            var jsonData = JsonConvert.SerializeObject(new Company
             {
-                serialKey = "5000065720",
-                TIN = "222-123-12-22"
+                serialKey = "5000012320",
+                TIN = "123-123-99-88",
+                events = procedures
             });
 
-            return company;
-        }*/
-    }
+            return jsonData;
+        }
+
+            /*        public static List<Company> CompanyData()
+                    {
+                        List<Company> company = new List<Company>();
+                        company.Add(new Company
+                        {
+                            serialKey = "5000065720",
+                            TIN = "222-123-12-22"
+                        });
+
+                        return company;
+                    }*/
+        }
 }
