@@ -29,6 +29,7 @@ namespace OptimaTracker
                 Environment.SpecialFolder.ApplicationData), optimaPath));
                     foreach (string line in logLines)
                     {
+                        // TODO first check if date is in line, if true, check that date with lastEventDate
                         if (line.Contains("Initialized") && ParseStringToDateTime(line) > lastEventDate)
                         {
                             foreach (string procedure in procedures)
@@ -62,7 +63,7 @@ namespace OptimaTracker
             return trackerEvents;
         }
 
-        public static bool LogFileExist()
+        private static bool LogFileExist()
         {
             var logFile = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.ApplicationData), optimaPath);
@@ -72,7 +73,7 @@ namespace OptimaTracker
             return false;
         }
 
-        public static DateTime ParseStringToDateTime(string line)
+        private static DateTime ParseStringToDateTime(string line)
         {
             Regex regex = new Regex("[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}");
             DateTime dateTime = DateTime.ParseExact(regex.Match(line).ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
