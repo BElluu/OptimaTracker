@@ -10,24 +10,31 @@ namespace OptimaTracker
 {
     public class Sender
     {
-        public async Task<string> PostAsync(string jsonData)
+        public static async Task<string> PostAsync(string jsonData)
         {
             using (var client = new HttpClient())
             {
-                var response = await client.PostAsync(
-                    "127.0.0.1/events",
-                    new StringContent(jsonData, Encoding.UTF8, "application/json"));
+                try
+                {
+                    var response = await client.PostAsync(
+                        "https://localhost:5001/api/events",
+                        new StringContent(jsonData, Encoding.UTF8, "application/json"));
 
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    return "OK";
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        return "OK";
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(new HttpResponseMessage(response.StatusCode) { Content = new StringContent(response.ReasonPhrase) });
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    throw new HttpResponseException(new HttpResponseMessage(response.StatusCode) { Content = new StringContent(response.ReasonPhrase) });
+                    Console.WriteLine(ex.Message);
+                    return ex.Message;
                 }
             }
         }
-
     }
 }
