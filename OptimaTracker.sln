@@ -4,15 +4,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimaTracker", "OptimaTracker.csproj", "{3B0C9F2C-3FD5-4C6D-80DA-3E773658CF8F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{096C6D46-C518-406A-B5A6-5AEF843381E2} = {096C6D46-C518-406A-B5A6-5AEF843381E2}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimaTrackerExecutable", "..\OptimaTrackerExecutable\OptimaTrackerExecutable.csproj", "{4AE78629-9D38-4897-A268-3964FF24078D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{096C6D46-C518-406A-B5A6-5AEF843381E2} = {096C6D46-C518-406A-B5A6-5AEF843381E2}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{12B809CD-6E87-47F6-925D-A71A6C0B7375}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimaTrackerWebService", "..\OptimaTrackerWebService\OptimaTrackerWebService.csproj", "{096C6D46-C518-406A-B5A6-5AEF843381E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OptimaTrackerWebService", "..\OptimaTrackerWebService\OptimaTrackerWebService.csproj", "{096C6D46-C518-406A-B5A6-5AEF843381E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
