@@ -10,6 +10,7 @@ namespace OptimaTracker
         readonly static string optimaPath = "Comarch\\Opt!ma\\Logs\\abc.log";
         public static List<Event> ReadOptimaLogs()
         {
+            Random rnd = new Random();
             DateTime lastEventDate = new DateTime();
             //Uncomment for tests
             //DateTime lastEventDate = DateTime.ParseExact("2021-07-18 18:07:20", 
@@ -45,7 +46,7 @@ namespace OptimaTracker
                                         trackerEvents.Add(new Event()
                                         {
                                             procedureId = procedure,
-                                            numberOfOccurrences = 1
+                                            numberOfOccurrences = rnd.Next(1, 50)
                                         });
                                     }
                                     lastEventDate = ParseStringToDateTime(line);
@@ -59,7 +60,6 @@ namespace OptimaTracker
                 {
                     Console.WriteLine("Something went wrong...");
                 }
-            Console.WriteLine(lastEventDate.ToString());
             return trackerEvents;
         }
 
