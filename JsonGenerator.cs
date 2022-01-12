@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -15,7 +16,7 @@ namespace OptimaTracker
                 events = procedures
             };
 
-            using (StreamWriter file = File.CreateText(@"D:\OptimaTracker.json"))
+            using (StreamWriter file = File.CreateText(@"Z:\OptimaTracker\OptimaTracker.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(file, jsonObject);
@@ -26,24 +27,24 @@ namespace OptimaTracker
         {
             var jsonData = JsonConvert.SerializeObject(new Company
             {
-                serialKey = "5000012320",
-                TIN = "123-123-99-88",
+                serialKey = GenerateSerialKey(), //Klucz na którym zalogowany jest klient
+                TIN = GenerateTIN(), // NIP z pieczątki firmy
                 events = procedures
             });
 
             return jsonData;
         }
 
-            /*        public static List<Company> CompanyData()
-                    {
-                        List<Company> company = new List<Company>();
-                        company.Add(new Company
-                        {
-                            serialKey = "5000065720",
-                            TIN = "222-123-12-22"
-                        });
-
-                        return company;
-                    }*/
+        private static string GenerateSerialKey()
+        {
+            Random rnd = new Random();
+            return rnd.Next(500000000, 500999999).ToString();
         }
+
+        private static string GenerateTIN()
+        {
+            Random rnd = new Random();
+            return rnd.Next(111111111, 999999999).ToString();
+        }
+    }
 }
