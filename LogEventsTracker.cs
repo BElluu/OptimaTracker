@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace OptimaTracker
 {
@@ -18,10 +20,12 @@ namespace OptimaTracker
             // System.Globalization.CultureInfo.InvariantCulture);
 
             List<Event> trackerEvents = new List<Event>();
-            string[] procedures = {
-                "Logowanie", "BazLista",
-                "KreatorBazy", "CfgStanowiskoOgolneParametry",
-                "CfgSerwisOperacjiAutomatycznych" };
+            /*            string[] procedures = {
+                            "Logowanie", "BazLista",
+                            "KreatorBazy", "CfgStanowiskoOgolneParametry",
+                            "CfgSerwisOperacjiAutomatycznych" };*/
+
+            var procedures = proceduresToArray();
 
             if (LogFileExist())
                 try
@@ -79,6 +83,14 @@ namespace OptimaTracker
             DateTime dateTime = DateTime.ParseExact(regex.Match(line).ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
             return dateTime;
+        }
+
+        private static string[] proceduresToArray()
+        {
+            XDocument procedureXml = XDocument.Load("D:\\pobrane\\OptimaTracker\\procid.xml");
+            string[] procedures = procedureXml.Root.Descendants("Procedure").Select(e => e.Attribute("Name").Value).ToArray();
+
+            return procedures;
         }
     }
 }
