@@ -41,15 +41,15 @@ namespace OptimaTracker
                             {
                                 if (line.Contains(procedure))
                                 {
-                                    if (trackerEvents.Exists(x => x.procedureId == procedure))
+                                    if (trackerEvents.Exists(x => x.procedureName == procedure))
                                     {
-                                        trackerEvents.Find(p => p.procedureId == procedure).numberOfOccurrences++;
+                                        trackerEvents.Find(p => p.procedureName == procedure).numberOfOccurrences++;
                                     }
                                     else
                                     {
                                         trackerEvents.Add(new Event()
                                         {
-                                            procedureId = procedure,
+                                            procedureName = procedure,
                                             numberOfOccurrences = rnd.Next(1, 50)
                                         });
                                     }
