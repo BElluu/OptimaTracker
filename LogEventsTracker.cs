@@ -9,33 +9,27 @@ namespace OptimaTracker
 {
     public class LogEventsTracker
     {
-        readonly static string optimaPath = "Comarch\\Opt!ma\\Logs\\abc.log";
-        public static List<Event> ReadOptimaLogs()
+        public static List<Event> ReadOptimaLogs(string pathToLogs, DateTime lastEventSendDate)
         {
             Random rnd = new Random();
-            DateTime lastEventDate = new DateTime();
             //Uncomment for tests
             //DateTime lastEventDate = DateTime.ParseExact("2021-07-18 18:07:20", 
             //"yyyy-MM-dd HH:mm:ss", 
             // System.Globalization.CultureInfo.InvariantCulture);
 
             List<Event> trackerEvents = new List<Event>();
-            /*            string[] procedures = {
-                            "Logowanie", "BazLista",
-                            "KreatorBazy", "CfgStanowiskoOgolneParametry",
-                            "CfgSerwisOperacjiAutomatycznych" };*/
 
             var procedures = proceduresToArray();
 
-            if (LogFileExist())
+            if (LogFileExist(pathToLogs))
                 try
                 {
                     var logLines = File.ReadAllLines(Path.Combine(Environment.GetFolderPath(
-                Environment.SpecialFolder.ApplicationData), optimaPath));
+                Environment.SpecialFolder.ApplicationData), pathToLogs));
                     foreach (string line in logLines)
                     {
-                        // TODO first check if date is in line, if true, check that date with lastEventDate
-                        if (line.Contains("Initialized") && ParseStringToDateTime(line) > lastEventDate)
+                        // TODO in ver2 - first check if date is in line, if true, check that date with lastEventDate
+                        if (line.Contains("Initialized") && ParseStringToDateTime(line) > lastEventSendDate)
                         {
                             foreach (string procedure in procedures)
                             {
@@ -50,10 +44,10 @@ namespace OptimaTracker
                                         trackerEvents.Add(new Event()
                                         {
                                             procedureName = procedure,
-                                            numberOfOccurrences = rnd.Next(1, 50)
+                                            numberOfOccurrences = 1
                                         });
                                     }
-                                    lastEventDate = ParseStringToDateTime(line);
+                                    lastEventSendDate = ParseStringToDateTime(line);
                                 }
                             }
                         }
@@ -67,10 +61,10 @@ namespace OptimaTracker
             return trackerEvents;
         }
 
-        private static bool LogFileExist()
+        private static bool LogFileExist(string pathToLogs)
         {
             var logFile = Path.Combine(Environment.GetFolderPath(
-            Environment.SpecialFolder.ApplicationData), optimaPath);
+            Environment.SpecialFolder.ApplicationData), pathToLogs);
             if (File.Exists(logFile))
                 return true;
 
@@ -87,7 +81,7 @@ namespace OptimaTracker
 
         private static string[] proceduresToArray()
         {
-            XDocument procedureXml = XDocument.Load("D:\\pobrane\\OptimaTracker\\procid.xml");
+            XDocument procedureXml = XDocument.Load("procedures.xml");
             string[] procedures = procedureXml.Root.Descendants("Procedure").Select(e => e.Attribute("Name").Value).ToArray();
 
             return procedures;
