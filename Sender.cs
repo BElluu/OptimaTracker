@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,13 +13,14 @@ namespace OptimaTracker
         {
             using (var client = new HttpClient())
             {
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 try
                 {
                     var response = await client.PostAsync(
                         "https://localhost:5001/api/events",
                         new StringContent(jsonData, Encoding.UTF8, "application/json"));
 
-                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
                         return "OK";
                     }
