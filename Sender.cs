@@ -9,7 +9,7 @@ namespace OptimaTracker
 {
     public class Sender
     {
-        public static async Task<string> PostAsync(string jsonData)
+        public static async Task<string> PostAsync(string jsonData, string url)
         {
             using (var client = new HttpClient())
             {
@@ -17,7 +17,7 @@ namespace OptimaTracker
                 try
                 {
                     var response = await client.PostAsync(
-                        "https://localhost:5001/api/events",
+                        url,
                         new StringContent(jsonData, Encoding.UTF8, "application/json"));
 
                     if (response.StatusCode == HttpStatusCode.OK)
