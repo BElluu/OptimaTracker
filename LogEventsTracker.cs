@@ -24,8 +24,10 @@ namespace OptimaTracker
             if (LogFileExist(pathToLogs))
                 try
                 {
-                    var logLines = File.ReadAllLines(Path.Combine(Environment.GetFolderPath(
-                Environment.SpecialFolder.ApplicationData), pathToLogs));
+                    var logLines = File.ReadAllLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathToLogs));
+                    // FOR LOCAL TESTS
+                   /* var logLines = File.ReadAllLines(Path.Combine(Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData), pathToLogs));*/
                     foreach (string line in logLines)
                     {
                         // TODO in ver2 - first check if date is in line, if true, check that date with lastEventDate
@@ -44,7 +46,7 @@ namespace OptimaTracker
                                         trackerEvents.Add(new Event()
                                         {
                                             procedureName = procedure,
-                                            numberOfOccurrences = 1
+                                            numberOfOccurrences = rnd.Next(1, 25)
                                         });
                                     }
                                     lastEventSendDate = ParseStringToDateTime(line);
@@ -63,8 +65,10 @@ namespace OptimaTracker
 
         private static bool LogFileExist(string pathToLogs)
         {
-            var logFile = Path.Combine(Environment.GetFolderPath(
-            Environment.SpecialFolder.ApplicationData), pathToLogs);
+            // FOR LOCAL TESTS
+            /* var logFile = Path.Combine(Environment.GetFolderPath(
+             Environment.SpecialFolder.ApplicationData), pathToLogs);*/
+            var logFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathToLogs);
             if (File.Exists(logFile))
                 return true;
 
